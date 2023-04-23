@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="MotywacjaTo początek serii wpisów dotyczących drzew zachowań.Dlaczego zdecydowałem się podjęcia tematu wielokrotnie opisywanego przez bardziej kompetentnych programistów? Przede wszystkim ze względów">
+<meta property="og:type" content="article">
+<meta property="og:title" content="behavior tree part 1">
+<meta property="og:url" content="https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/index.html">
+<meta property="og:site_name" content="Tom Willmowski&#39;s blog">
+<meta property="og:description" content="MotywacjaTo początek serii wpisów dotyczących drzew zachowań.Dlaczego zdecydowałem się podjęcia tematu wielokrotnie opisywanego przez bardziej kompetentnych programistów? Przede wszystkim ze względów">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-04-22T08:27:05.000Z">
+<meta property="article:modified_time" content="2023-04-23T12:40:03.479Z">
+<meta property="article:author" content="Mateusz Kalecinski">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>behavior tree part 1</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2021/03/01/get-texture-size/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&text=behavior tree part 1"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&title=behavior tree part 1"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&is_video=false&description=behavior tree part 1"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=behavior tree part 1&body=Check out this article: https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&title=behavior tree part 1"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&title=behavior tree part 1"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&title=behavior tree part 1"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&title=behavior tree part 1"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&name=behavior tree part 1&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&t=behavior tree part 1"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Motywacja"><span class="toc-number">1.</span> <span class="toc-text">Motywacja</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Abstrakt"><span class="toc-number">2.</span> <span class="toc-text">Abstrakt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Wstep"><span class="toc-number">3.</span> <span class="toc-text">Wstęp</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#chat-gpt-bullet-points"><span class="toc-number">4.</span> <span class="toc-text">chat-gpt bullet points</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Co-i-do-czego"><span class="toc-number">5.</span> <span class="toc-text">Co i do czego?</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Architektura"><span class="toc-number">6.</span> <span class="toc-text">Architektura</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Behavior"><span class="toc-number">6.1.</span> <span class="toc-text">Behavior</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Behavior-Tree"><span class="toc-number">6.2.</span> <span class="toc-text">Behavior Tree</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Blackboard"><span class="toc-number">6.3.</span> <span class="toc-text">Blackboard</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Nodes"><span class="toc-number">7.</span> <span class="toc-text">Nodes</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        behavior tree part 1
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Tom Willmowski's blog</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-04-22T08:27:05.000Z" itemprop="datePublished">2023-04-22</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Motywacja"><a href="#Motywacja" class="headerlink" title="Motywacja"></a>Motywacja</h1><p>To początek serii wpisów dotyczących drzew zachowań.<br>Dlaczego zdecydowałem się podjęcia tematu wielokrotnie opisywanego przez bardziej kompetentnych programistów?</p>
+<p>Przede wszystkim ze względów personalnych - ma to być próba uporządkowania mojej aktualnej wiedzy i doświadczenia. Chciałbym również zmotywować się do usprawnienia własnych implementacji.</p>
+<p>Drugim powodem jest ograniczony dostęp do (rozwiniętych) materiałów dotyczących drzew zachowań w języku polskim.</p>
+<h1 id="Abstrakt"><a href="#Abstrakt" class="headerlink" title="Abstrakt"></a>Abstrakt</h1><p>W pierwszej części serii dotyczącej drzew zachowań chciałbym się skupić na ogólnym przedstawieniu rozwiązania, wraz z przykładową implementacją (bazującą w dużej mierze na <a href="%22http://www.gameaipro.com/GameAIPro/GameAIPro_Chapter06_The_Behavior_Tree_Starter_Kit.pdf%22">behavior tree starter kit</a>).</p>
+<h1 id="Wstep"><a href="#Wstep" class="headerlink" title="Wstęp"></a>Wstęp</h1><p>Drzewa zachowań (Behavior Trees - BT) są techniką modelowania i procesowania zachowań oraz decyzji agentów AI. Należy ona do najbardziej popularnych technik używanych w gamingu od wielu lat. Co ciekawe, o ile koncept BT jest raczej tak samo rozumiany przez programistów, o tyle nazewnictwo i szczegóły implementacyjne nie zostały uwspólnione.</p>
+<h1 id="chat-gpt-bullet-points"><a href="#chat-gpt-bullet-points" class="headerlink" title="chat-gpt bullet points"></a>chat-gpt bullet points</h1><p>Title: A Comprehensive Guide to Behavior Trees: Understanding and Implementing Effective Decision-Making in AI Systems</p>
+<p>I. Introduction</p>
+<pre><code>Definition of behavior trees as hierarchical decision-making structures used in artificial intelligence (AI) systems
+Overview of their role in controlling AI behavior and decision-making
+Importance of optimal behavior tree design in achieving desired AI outcomes
+</code></pre>
+<p>II. Understanding Behavior Trees</p>
+<pre><code>In-depth explanation of the basic structure and components of a behavior tree, including root, decorators, composites, and leaf nodes
+Detailed discussion on the functionalities and behaviors of different types of nodes, such as sequence, selector, parallel, and decorator nodes
+Analysis of the advantages and disadvantages of each type of node in influencing AI decision-making
+</code></pre>
+<p>III. Types of Behavior Tree Nodes</p>
+<pre><code>Detailed examination of the different types of behavior tree nodes and their functionalities, including conditional and action nodes
+Analysis of how each type of node affects AI behavior and decision-making in different scenarios
+Discussion on advanced nodes, such as probability, time, and memory nodes, and their impact on AI behavior
+</code></pre>
+<p>IV. Designing Effective Behavior Trees</p>
+<pre><code>In-depth guidelines for designing behavior trees that accurately represent desired AI behavior and objectives
+Discussion on defining goals and objectives for AI systems and translating them into behavior tree design
+Strategies for structuring behavior trees to handle complex decision-making processes and achieve optimal outcomes
+</code></pre>
+<p>V. Implementing Behavior Trees</p>
+<pre><code>Technical considerations for implementing behavior trees in AI systems, including popular programming languages and frameworks used for behavior tree implementation
+Best practices for coding and integrating behavior trees into AI applications, such as handling concurrency, managing state, and handling failures
+Tips for optimizing performance and efficiency in behavior tree implementation
+</code></pre>
+<p>VI. Debugging and Testing Behavior Trees</p>
+<pre><code>Challenges and strategies for debugging behavior trees, including techniques for identifying and resolving common issues
+Strategies for testing behavior tree functionality and performance, including unit testing, integration testing, and simulation
+Analysis of common pitfalls and errors in behavior tree implementation and troubleshooting strategies
+</code></pre>
+<p>VII. Real-World Applications of Behavior Trees</p>
+<pre><code>Examples of behavior tree usage in diverse AI applications, such as video games, robotics, autonomous vehicles, and virtual assistants
+Case studies on successful implementation of behavior trees in real-world scenarios, highlighting challenges faced and lessons learned
+Analysis of the impact and benefits of behavior trees in real-world AI systems
+</code></pre>
+<p>VIII. Limitations and Future Directions</p>
+<pre><code>Discussion of limitations and challenges of behavior trees in AI systems, such as scalability, adaptability, and interpretability
+Overview of potential future directions and advancements in behavior tree technology, such as incorporating machine learning and natural language processing
+Considerations for further research and development in behavior tree applications, including addressing limitations and improving performance
+</code></pre>
+<p>IX. Conclusion</p>
+<pre><code>Summary of key technical concepts covered in the article
+Importance of optimal behavior tree design in achieving effective AI decision-making
+Encouragement for further exploration, implementation, and research in behavior tree applications in AI systems
+</code></pre>
+<p>X. References</p>
+<pre><code>Comprehensive list of sources and references used in the article for further technical reading and research.
+</code></pre>
+<h1 id="Co-i-do-czego"><a href="#Co-i-do-czego" class="headerlink" title="Co i do czego?"></a>Co i do czego?</h1><h1 id="Architektura"><a href="#Architektura" class="headerlink" title="Architektura"></a>Architektura</h1><h2 id="Behavior"><a href="#Behavior" class="headerlink" title="Behavior"></a>Behavior</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="built_in">enum</span> BehaviorStatus</span><br><span class="line">&#123;</span><br><span class="line">    Invalid,</span><br><span class="line">    Success,</span><br><span class="line">    Failure,</span><br><span class="line">    Running,</span><br><span class="line">    Aborted</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">Behavior</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> BehaviorStatus Status &#123; <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">Enter</span>()</span> &#123; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">virtual</span> BehaviorStatus <span class="title">Update</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> BehaviorStatus.Invalid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">Exit</span>(<span class="params">BehaviorStatus status</span>)</span> &#123; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> BehaviorStatus <span class="title">Tick</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (Status != BehaviorStatus.Running)</span><br><span class="line">        &#123;</span><br><span class="line">            Enter();</span><br><span class="line">        &#125;</span><br><span class="line">        Status = Update();</span><br><span class="line">        <span class="keyword">if</span> (Status != BehaviorStatus.Running)</span><br><span class="line">        &#123;</span><br><span class="line">            Exit(Status);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> Status;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Reset</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        Exit(BehaviorStatus.Invalid);</span><br><span class="line">        Status = BehaviorStatus.Invalid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Abort</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        Exit(BehaviorStatus.Aborted);</span><br><span class="line">        Status = BehaviorStatus.Aborted;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">IsTerminated</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> Status <span class="keyword">is</span> BehaviorStatus.Success <span class="keyword">or</span> BehaviorStatus.Failure;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">IsRunning</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> Status == BehaviorStatus.Running;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Behavior-Tree"><a href="#Behavior-Tree" class="headerlink" title="Behavior Tree"></a>Behavior Tree</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BehaviorTree</span></span><br><span class="line">&#123;        </span><br><span class="line">    <span class="keyword">private</span> Behavior root;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">BehaviorTree</span>(<span class="params">Behavior root</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">this</span>.root = root;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> BehaviorStatus <span class="title">Tick</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> status = root.Tick();</span><br><span class="line">        <span class="keyword">if</span> (status != BehaviorStatus.Running)</span><br><span class="line">        &#123;</span><br><span class="line">            Reset();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> status;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Reset</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        root.Reset();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Blackboard"><a href="#Blackboard" class="headerlink" title="Blackboard"></a>Blackboard</h2><h1 id="Nodes"><a href="#Nodes" class="headerlink" title="Nodes"></a>Nodes</h1>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Motywacja"><span class="toc-number">1.</span> <span class="toc-text">Motywacja</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Abstrakt"><span class="toc-number">2.</span> <span class="toc-text">Abstrakt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Wstep"><span class="toc-number">3.</span> <span class="toc-text">Wstęp</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#chat-gpt-bullet-points"><span class="toc-number">4.</span> <span class="toc-text">chat-gpt bullet points</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Co-i-do-czego"><span class="toc-number">5.</span> <span class="toc-text">Co i do czego?</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Architektura"><span class="toc-number">6.</span> <span class="toc-text">Architektura</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Behavior"><span class="toc-number">6.1.</span> <span class="toc-text">Behavior</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Behavior-Tree"><span class="toc-number">6.2.</span> <span class="toc-text">Behavior Tree</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Blackboard"><span class="toc-number">6.3.</span> <span class="toc-text">Blackboard</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Nodes"><span class="toc-number">7.</span> <span class="toc-text">Nodes</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&text=behavior tree part 1"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&title=behavior tree part 1"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&is_video=false&description=behavior tree part 1"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=behavior tree part 1&body=Check out this article: https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&title=behavior tree part 1"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&title=behavior tree part 1"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&title=behavior tree part 1"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&title=behavior tree part 1"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&name=behavior tree part 1&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://tom-willmowski.github.io/2023/04/22/behavior-tree-part-1/&t=behavior tree part 1"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2023
+    Mateusz Kalecinski
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
